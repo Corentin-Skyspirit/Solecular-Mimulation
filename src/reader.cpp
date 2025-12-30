@@ -16,7 +16,7 @@ Reader::Reader(std::string pathTofile) {
                 ss >> coords[1];
                 ss >> coords[2];
 
-                points.push_back(coords);
+                particules.push_back(coords);
 
                 // std::cout << coords[0] << ", "
                 //           << coords[1] << ", "
@@ -29,8 +29,8 @@ Reader::Reader(std::string pathTofile) {
     else std::cout << "Unable to open file" << std::endl; 
 }
 
-std::vector<std::array<float, 3>> Reader::getPoints() {
-    return points;
+std::vector<std::array<float, 3>> Reader::getParticules() {
+    return particules;
 }
 
 Reader::~Reader() {};

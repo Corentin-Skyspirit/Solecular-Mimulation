@@ -1,7 +1,5 @@
-add_executable(main)
-
 target_sources(main PRIVATE  
-    main.cpp
+    simulation.cpp
     reader.cpp
 )
 

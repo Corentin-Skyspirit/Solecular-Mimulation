@@ -8,10 +8,10 @@
 
 class Reader {
 private:    
-    std::vector<std::array<float, 3>> points;
+    std::vector<std::array<float, 3>> particules;
 
 public:
     Reader(std::string pathToFile);
-    std::vector<std::array<float, 3>> getPoints();
+    std::vector<std::array<float, 3>> getParticules();
     ~Reader();
 };
