@@ -1,8 +1,6 @@
 #include "include/reader.hpp"
 #include "include/simulation.hpp"
 
-using particuleList = std::vector<std::array<float, 3>>;
-
 int main(int argc, char const *argv[]) {
     if (argc > 1) {
         std::string path = argv[1];
@@ -13,12 +11,24 @@ int main(int argc, char const *argv[]) {
         double energie = simu.energieMicro();
         std::cout << energie << std::endl;
 
-        // for (int i = 0; i < particules.size()-1; i ++) {
-        //     std::array<float, 3> coords = particules[i];
-        //     std::cout << coords[0] << ", "
-        //               << coords[1] << ", "
-        //               << coords[2] << std::endl;
-        // }
+        simu.calculForces();
+        particuleList forces = simu.getForces();
+
+        double totalx = 0.0;
+        double totaly = 0.0;
+        double totalz = 0.0;
+
+        for (int i = 0; i < forces.size()-1; i ++) {
+            coord dims = forces[i];
+            totalx += dims[0];
+            totaly += dims[1];
+            totalz += dims[2];
+
+            // std::cout << dims[0] << ", "
+            //           << dims[1] << ", "
+            //           << dims[2] << std::endl;
+        }
+        std::cout << totalx << "/" << totaly << "/" << totalz << std::endl;
         return 0;
     } else std::cout << "Need an path to particle file" << std::endl;
 }

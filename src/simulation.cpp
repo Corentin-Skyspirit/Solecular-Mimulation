@@ -1,5 +1,8 @@
 #include "../include/simulation.hpp"
 
+constexpr double r_etoile = 3.0;
+constexpr double epsilon = 0.2;
+
 constexpr int N_particules_total = 1000;
 
 Simulation::Simulation(particuleList particules_depart) {
@@ -16,27 +19,58 @@ double Simulation::distance_carre(coord point1, coord point2) {
             (point1[2] - point2[2]) * (point1[2] - point2[2]);
 }
 
+particuleList Simulation::getParticules() {
+    return particules;
+}
+
+particuleList Simulation::getForces() {
+    return forces;
+}
+
 void Simulation::run() {
 
 }
 
 double Simulation::energieMicro() {
-    double r_etoile = 9.0; // 3.0 au carré
-    double epsilon = 0.2;
+    double r_etoile2 = r_etoile * r_etoile;
 
     double total = 0.0;
-    double uij;
 
     for (int i = 0; i < N_particules_total; i++) {
         for (int j = i+1; j < N_particules_total; j++) {
-            uij += epsilon * (pow((r_etoile / distance_carre(particules[i], particules[j])), 6) 
-                        - 2 * pow((r_etoile / distance_carre(particules[i], particules[j])), 3));
-            total += uij;
+
+            double dist2_ij = distance_carre(particules[i], particules[j]);
+            // calcul de uij
+            energie_micro_systeme += epsilon * (pow((r_etoile2 / dist2_ij), 6) 
+                        - 2 * pow((r_etoile2 / dist2_ij), 3));
+            total += energie_micro_systeme;
         }
     }
-    return total * 4;
+    energie_micro_systeme = total * 4;
+    return energie_micro_systeme;
 }
 
 void Simulation::calculForces() {
-    
+    double r_etoile2 = r_etoile * r_etoile;
+
+    for (int i = 0; i < N_particules_total; i++) {
+        for (int j = 0; j < N_particules_total; j ++) {
+
+            coord forces_particule;
+            double dist2_ij = distance_carre(particules[i], particules[j]);
+            if (dist2_ij == 0) {
+                forces_particule = {0, 0, 0};
+            } else {
+                // calcul des forces de la particule
+                for (int dim = 0; dim < 3; dim++) {
+                    // calcul pour chaque dimension (x, y et z)
+                    forces_particule[dim] = -48 * epsilon * 
+                        (pow((r_etoile2 / dist2_ij), 6) 
+                        - pow((r_etoile2 / dist2_ij), 3))
+                        * ((particules[i][dim] - particules[j][dim]) / dist2_ij);
+                }
+            }
+            forces.push_back(forces_particule);
+        }
+    }
 }

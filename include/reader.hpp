@@ -6,12 +6,15 @@
 #include <array>
 #include <sstream>
 
+using particuleList = std::vector<std::array<double, 3>>;
+using coord = std::array<double, 3>;
+
 class Reader {
 private:    
-    std::vector<std::array<float, 3>> particules;
+    particuleList particules;
 
 public:
     Reader(std::string pathToFile);
-    std::vector<std::array<float, 3>> getParticules();
+    particuleList getParticules();
     ~Reader();
 };

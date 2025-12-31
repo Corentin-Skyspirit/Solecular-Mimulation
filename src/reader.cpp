@@ -9,7 +9,7 @@ Reader::Reader(std::string pathTofile) {
                 std::stringstream ss(line);
 
                 int ignore;
-                std::array<float,3> coords;
+                coord coords;
 
                 ss >> ignore;
                 ss >> coords[0];
@@ -29,7 +29,7 @@ Reader::Reader(std::string pathTofile) {
     else std::cout << "Unable to open file" << std::endl; 
 }
 
-std::vector<std::array<float, 3>> Reader::getParticules() {
+particuleList Reader::getParticules() {
     return particules;
 }
 
