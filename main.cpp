@@ -9,7 +9,7 @@ int main(int argc, char const *argv[]) {
 
         Simulation simu = Simulation(particules);
         double energie = simu.energieMicro();
-        std::cout << energie << std::endl;
+        std::cerr << energie << std::endl;
 
         simu.calculForces();
         particuleList forces = simu.getForces();
@@ -23,12 +23,16 @@ int main(int argc, char const *argv[]) {
             totalx += dims[0];
             totaly += dims[1];
             totalz += dims[2];
-
-            // std::cout << dims[0] << ", "
-            //           << dims[1] << ", "
-            //           << dims[2] << std::endl;
         }
-        std::cout << totalx << "/" << totaly << "/" << totalz << std::endl;
+        
+        for (int i = 0; i < particules.size()-1; i ++) {
+            coord particule = particules[i];
+            std::cout << particule[0] << ", "
+                      << particule[1] << ", "
+                      << particule[2] << "\n";
+        }
+        std::cerr << totalx << "/" << totaly << "/" << totalz << std::endl;
+        std::cerr << particules.size() << " - " << forces.size() << std::endl;
         return 0;
-    } else std::cout << "Need an path to particle file" << std::endl;
+    } else std::cerr << "Need an path to particle file" << std::endl;
 }
