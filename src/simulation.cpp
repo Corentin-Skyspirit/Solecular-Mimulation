@@ -2,11 +2,31 @@
 
 constexpr double r_etoile = 3.0;
 constexpr double epsilon = 0.2;
+constexpr double L = 42.0;
 
 constexpr int N_particules_total = 1000;
 
 Simulation::Simulation(particuleList particules_depart) {
     particules = particules_depart;
+    int cpt = 0;
+    for (int x = -1; x < 2; x++) {
+        for (int y = -1; y < 2; y++) {
+            for (int z = -1; z < 2; z++) {
+                std::cerr << "n_sym id = " << cpt++ << " for " << x << y << z << " box" << std::endl;
+                if (x == y == z == 0) {
+                    n_sym.push_back(particules_depart);
+                }
+                else {
+                    // omg 4 for complexity, hopefully it's just for the init
+                    particuleList box;
+                    for (coord particule: particules_depart){
+                        box.push_back({particule[0] + (L * x), particule[1] + (L * y), particule[2] + (L * z)});
+                    }
+                    n_sym.push_back(box);
+                }
+            }
+        }
+    }
     N_particules_local = N_particules_total;
 }
 
