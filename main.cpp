@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
                       << particule[2] << "\n";
         }
         std::cerr << totalx << "/" << totaly << "/" << totalz << std::endl;
-        std::cerr << particules.size() << " - " << forces.size() << std::endl;
+        // std::cerr << particules.size() << " - " << forces.size() << std::endl;
         return 0;
     } else std::cerr << "Need an path to particle file" << std::endl;
 }
