@@ -7,14 +7,13 @@ constexpr double L = 42.0;
 constexpr int N_particules_total = 1000;
 
 Simulation::Simulation(particuleList particules_depart) {
-    particules = particules_depart;
     int cpt = 0;
     for (int x = -1; x < 2; x++) {
         for (int y = -1; y < 2; y++) {
             for (int z = -1; z < 2; z++) {
-                std::cerr << "n_sym id = " << cpt++ << " for " << x << y << z << " box" << std::endl;
+                std::cerr << "id = " << cpt++ << " for " << x << y << z << " box" << std::endl;
                 if (x == y == z == 0) {
-                    n_sym.push_back(particules_depart);
+                    boxes.push_back(particules_depart);
                 }
                 else {
                     // omg 4 for complexity, hopefully it's just for the init
@@ -22,7 +21,7 @@ Simulation::Simulation(particuleList particules_depart) {
                     for (coord particule: particules_depart){
                         box.push_back({particule[0] + (L * x), particule[1] + (L * y), particule[2] + (L * z)});
                     }
-                    n_sym.push_back(box);
+                    boxes.push_back(box);
                 }
             }
         }
@@ -40,7 +39,7 @@ double Simulation::distance_carre(coord point1, coord point2) {
 }
 
 particuleList Simulation::getParticules() {
-    return particules;
+    return boxes[13]; // the 0 0 0 particles box
 }
 
 particuleList Simulation::getForces() {
@@ -55,15 +54,16 @@ double Simulation::energieMicro() {
     double r_etoile2 = r_etoile * r_etoile;
 
     double total = 0.0;
+    for (particuleList particules: boxes) {
+        for (int i = 0; i < N_particules_total; i++) {
+            for (int j = i+1; j < N_particules_total; j++) {
 
-    for (int i = 0; i < N_particules_total; i++) {
-        for (int j = i+1; j < N_particules_total; j++) {
-
-            double dist2_ij = distance_carre(particules[i], particules[j]);
-            // calcul de uij
-            energie_micro_systeme += epsilon * (pow((r_etoile2 / dist2_ij), 6) 
-                        - 2 * pow((r_etoile2 / dist2_ij), 3));
-            total += energie_micro_systeme;
+                double dist2_ij = distance_carre(particules[i], particules[j]);
+                // uij calc
+                energie_micro_systeme += epsilon * (pow((r_etoile2 / dist2_ij), 6) 
+                            - 2 * pow((r_etoile2 / dist2_ij), 3));
+                total += energie_micro_systeme;
+            }
         }
     }
     energie_micro_systeme = total * 4;
@@ -72,7 +72,7 @@ double Simulation::energieMicro() {
 
 void Simulation::calculForces() {
     double r_etoile2 = r_etoile * r_etoile;
-
+    particuleList particules = boxes[13];
     for (int i = 0; i < N_particules_total; i++) {
         for (int j = 0; j < N_particules_total; j ++) {
 
@@ -81,9 +81,9 @@ void Simulation::calculForces() {
             if (dist2_ij == 0) {
                 forces_particule = {0, 0, 0};
             } else {
-                // calcul des forces de la particule
+                // forces computing
                 for (int dim = 0; dim < 3; dim++) {
-                    // calcul pour chaque dimension (x, y et z)
+                    // for every dimensions (x, y and z)
                     forces_particule[dim] = -48 * epsilon * 
                         (pow((r_etoile2 / dist2_ij), 6) 
                         - pow((r_etoile2 / dist2_ij), 3))
