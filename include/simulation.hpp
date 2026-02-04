@@ -18,6 +18,7 @@ private:
     particuleList forces;
 
     double distance_carre(coord point1, coord point2);
+    coord apply_box(coord particule, coord box);
 public:
     Simulation(particuleList particules_depart);
     ~Simulation();

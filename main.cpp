@@ -18,21 +18,21 @@ int main(int argc, char const *argv[]) {
         double totaly = 0.0;
         double totalz = 0.0;
 
-        for (int i = 0; i < forces.size()-1; i ++) {
+        for (int i = 0; i < forces.size(); i ++) {
             coord dims = forces[i];
             totalx += dims[0];
             totaly += dims[1];
             totalz += dims[2];
         }
         
-        for (int i = 0; i < particules.size()-1; i ++) {
+        for (int i = 0; i < particules.size(); i ++) {
             coord particule = particules[i];
             std::cout << particule[0] << ", "
                       << particule[1] << ", "
                       << particule[2] << "\n";
         }
         std::cerr << totalx << "/" << totaly << "/" << totalz << std::endl;
-        // std::cerr << particules.size() << " - " << forces.size() << std::endl;
+        std::cerr << particules.size() << " - " << forces.size() << std::endl;
         return 0;
     } else std::cerr << "Need an path to particle file" << std::endl;
 }
