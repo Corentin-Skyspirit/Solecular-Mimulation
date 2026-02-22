@@ -4,8 +4,9 @@ constexpr double r_etoile = 3.0;
 constexpr double epsilon = 0.2;
 constexpr double r_cut = 10.0;
 constexpr double L = 42.0;
+constexpr double conversion_force = 0.0004186;
 
-constexpr int n_sym = 1;
+constexpr int n_sym = 2;
 constexpr int N_particules_total = 1000;
 
 Simulation::Simulation(particuleList particules_depart) {
