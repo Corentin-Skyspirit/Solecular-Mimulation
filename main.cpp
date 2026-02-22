@@ -8,11 +8,17 @@ int main(int argc, char const *argv[]) {
         particuleList particules = reader.getParticules();
 
         Simulation simu = Simulation(particules);
-        double energie = simu.energieMicro();
+        double energie = simu.calculEnergieMicro();
         std::cerr << energie << std::endl;
 
         simu.calculForces();
         particuleList forces = simu.getForces();
+
+        simu.calculEnergieCinetique();
+        double cinetique = simu.getEnergieCinetique();
+
+        simu.calculTemperature();
+        double temperature = simu.getTemperature();
 
         double totalx = 0.0;
         double totaly = 0.0;
@@ -33,6 +39,7 @@ int main(int argc, char const *argv[]) {
         }
         std::cerr << totalx << "/" << totaly << "/" << totalz << std::endl;
         std::cerr << particules.size() << " - " << forces.size() << std::endl;
+        std::cerr << "Energie cinetique : " << cinetique << " - Temperature : " << temperature << std::endl;
         return 0;
     } else std::cerr << "Need an path to particle file" << std::endl;
 }

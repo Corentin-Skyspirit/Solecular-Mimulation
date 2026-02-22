@@ -12,21 +12,30 @@ class Simulation {
 private:
     int N_particules_local;
     double energie_micro_systeme;
+    double energie_cinetique;
+    double temperature;
     particuleList particules;
     particuleList particules_loc;
+    particuleList moment_cinetique;
     std::vector<coord> boxes;
     particuleList forces;
 
-    double distance_carre(coord point1, coord point2);
-    coord apply_box(coord particule, coord box);
+    double distanceCarre(coord point1, coord point2);
+    coord applyBox(coord particule, coord box);
+    particuleList momentCinetique();
 public:
     Simulation(particuleList particules_depart);
     ~Simulation();
 
     particuleList getParticules();
     particuleList getForces();
+    double getEnergieMicro();
+    double getEnergieCinetique();
+    double getTemperature();
     
     void run();
-    double energieMicro();
+    double calculEnergieMicro();
     void calculForces();
+    double calculEnergieCinetique();
+    double calculTemperature();
 };
