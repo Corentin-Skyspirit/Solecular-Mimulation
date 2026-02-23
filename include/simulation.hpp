@@ -14,6 +14,7 @@ private:
     double energie_micro_systeme;
     double energie_cinetique;
     double temperature;
+    coord cinetiqueCentremasse;
     particuleList particules;
     particuleList particules_loc;
     particuleList moment_cinetique;
@@ -22,7 +23,7 @@ private:
 
     double distanceCarre(coord point1, coord point2);
     coord applyBox(coord particule, coord box);
-    particuleList momentCinetique();
+    void rapport();
 public:
     Simulation(particuleList particules_depart);
     ~Simulation();
@@ -34,8 +35,10 @@ public:
     double getTemperature();
     
     void run();
-    double calculEnergieMicro();
+    void calculEnergieMicro();
     void calculForces();
-    double calculEnergieCinetique();
-    double calculTemperature();
+    void calculEnergieCinetique();
+    void calculTemperature();
+    void calculCentreMasse();
+    void calculMomentCinetique();
 };

@@ -33,11 +33,8 @@ Simulation::Simulation(particuleList particules_depart) {
         coord coord = {(rand() % 2) - 1, (rand() % 2) - 1, (rand() % 2) - 1};
         moment_cinetique.push_back(coord);
     }
-    double rapport = sqrt(n_dl * const_r * T / calculEnergieCinetique());
-    for (int i = 0; i < n_particules_total; i ++) {
-        coord co = {moment_cinetique[i][0] * rapport, moment_cinetique[i][1] * rapport, moment_cinetique[i][2] * rapport};
-        moment_cinetique[i] = co;
-    }
+    calculEnergieCinetique();
+    rapport();
 }
 
 Simulation::~Simulation() {
@@ -56,6 +53,18 @@ coord Simulation::applyBox(coord particule, coord box) {
         particule[2] + box[2]
     };
     return part;
+}
+
+void Simulation::rapport() {
+    double rapport = sqrt(n_dl * const_r * T / energie_cinetique);
+    for (int i = 0; i < n_particules_total; i ++) {
+        coord co = {
+            moment_cinetique[i][0] * rapport, 
+            moment_cinetique[i][1] * rapport, 
+            moment_cinetique[i][2] * rapport
+        };
+        moment_cinetique[i] = co;
+    }
 }
 
 particuleList Simulation::getParticules() {
@@ -79,10 +88,15 @@ double Simulation::getTemperature() {
 }
 
 void Simulation::run() {
-
+    calculEnergieMicro();
+    calculForces();
+    calculEnergieCinetique();
+    calculCentreMasse();
+    calculMomentCinetique();
+    calculTemperature();
 }
 
-double Simulation::calculEnergieMicro() {
+void Simulation::calculEnergieMicro() {
     double r_etoile2 = r_etoile * r_etoile;
 
     double total = 0.0;
@@ -101,12 +115,11 @@ double Simulation::calculEnergieMicro() {
         }
     }
     energie_micro_systeme = total * epsilon * 2;
-    return energie_micro_systeme;
 }
 
 void Simulation::calculForces() {
     double r_etoile2 = r_etoile * r_etoile;
-    std::cerr << boxes.size()/2 << std::endl;
+    // std::cerr << boxes.size()/2 << std::endl;
     for (int i = 0; i < n_particules_total; i++) {
         coord forces_particule = {0, 0, 0};
         for (coord box:boxes) {
@@ -131,17 +144,40 @@ void Simulation::calculForces() {
     }
 }
 
-double Simulation::calculEnergieCinetique() {
+void Simulation::calculEnergieCinetique() {
     double temp = 0.0;
     for (coord particule : moment_cinetique) {
         temp += particule[0] * particule[0] + particule[1] * particule[1] + particule[2] * particule[2];
     }
     temp /= m_i;
     energie_cinetique = (1 / (2 * conversion_force)) * temp;
-    return energie_cinetique;
 }
 
-double Simulation::calculTemperature() {
+void Simulation::calculTemperature() {
     temperature = (1 / (n_dl * const_r)) * energie_cinetique;
-    return temperature;
 }   
+
+void Simulation::calculCentreMasse() {
+    double x = 0;
+    double y = 0;
+    double z = 0;
+    for (coord particule : moment_cinetique) {
+        x += particule[0];
+        y += particule[1];
+        z += particule[2];
+    }
+    cinetiqueCentremasse = {x, y, z};
+}
+
+void Simulation::calculMomentCinetique() {
+    for (int i = 0; i < n_particules_total; i ++) {
+        coord co = {
+            moment_cinetique[i][0] - (cinetiqueCentremasse[0] / n_particules_total), 
+            moment_cinetique[i][1] - (cinetiqueCentremasse[1] / n_particules_total), 
+            moment_cinetique[i][2] - (cinetiqueCentremasse[2] / n_particules_total)
+        };
+        moment_cinetique[i] = co;
+    }
+    calculEnergieCinetique();
+    rapport();
+}

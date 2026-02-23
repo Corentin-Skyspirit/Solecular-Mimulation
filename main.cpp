@@ -8,8 +8,8 @@ int main(int argc, char const *argv[]) {
         particuleList particules = reader.getParticules();
 
         Simulation simu = Simulation(particules);
-        double energie = simu.calculEnergieMicro();
-        std::cerr << energie << std::endl;
+        simu.calculEnergieMicro();
+        std::cerr << simu.getEnergieMicro() << std::endl;
 
         simu.calculForces();
         particuleList forces = simu.getForces();
@@ -40,6 +40,15 @@ int main(int argc, char const *argv[]) {
         std::cerr << totalx << "/" << totaly << "/" << totalz << std::endl;
         std::cerr << particules.size() << " - " << forces.size() << std::endl;
         std::cerr << "Energie cinetique : " << cinetique << " - Temperature : " << temperature << std::endl;
+        for (int k = 0; k < 100; k++) {
+            simu.run();
+            std::cerr 
+            << "Energie cinetique : " << simu.getEnergieCinetique() 
+            << " - Energie potentielle : " << simu.getEnergieMicro() 
+            << " - Energie totale : " << simu.getEnergieCinetique() + simu.getEnergieMicro()
+            << " - Temperature : " << simu.getTemperature() 
+            << std::endl;
+        }
         return 0;
     } else std::cerr << "Need an path to particle file" << std::endl;
 }
