@@ -9,6 +9,7 @@ constexpr double conversion_force = 0.0004186;
 constexpr double const_r = 0.00199;
 constexpr int m_i = 18;
 constexpr int T = 300;
+constexpr int dt = 1;
 
 constexpr int n_sym = 2;
 constexpr int n_particules_total = 1000;
@@ -35,6 +36,7 @@ Simulation::Simulation(particuleList particules_depart) {
     }
     calculEnergieCinetique();
     rapport();
+    calculMomentCinetique();
 }
 
 Simulation::~Simulation() {
@@ -170,7 +172,7 @@ void Simulation::calculCentreMasse() {
 }
 
 void Simulation::calculMomentCinetique() {
-    for (int i = 0; i < n_particules_total; i ++) {
+    for (int i = 0; i < n_particules_total; i++) {
         coord co = {
             moment_cinetique[i][0] - (cinetiqueCentremasse[0] / n_particules_total), 
             moment_cinetique[i][1] - (cinetiqueCentremasse[1] / n_particules_total), 
@@ -180,4 +182,20 @@ void Simulation::calculMomentCinetique() {
     }
     calculEnergieCinetique();
     rapport();
+}
+
+void Simulation::updateMomentCinetique() {
+    for (int i = 0; i < n_particules_total; i++) {
+        moment_cinetique[i][0] = moment_cinetique[i][0] - 0.5 * forces[i][0] * conversion_force * dt;
+        moment_cinetique[i][1] = moment_cinetique[i][1] - 0.5 * forces[i][1] * conversion_force * dt;
+        moment_cinetique[i][2] = moment_cinetique[i][2] - 0.5 * forces[i][2] * conversion_force * dt;
+    }
+}
+
+void Simulation::updatePosition() {
+    for (int i = 0; i < n_particules_total; i++) {
+        particules[i][0] = particules[i][0] + moment_cinetique[i][0] / m_i * dt;
+        particules[i][1] = particules[i][1] + moment_cinetique[i][1] / m_i * dt;
+        particules[i][2] = particules[i][2] + moment_cinetique[i][2] / m_i * dt;
+    }
 }

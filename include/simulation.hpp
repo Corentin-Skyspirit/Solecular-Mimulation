@@ -41,4 +41,6 @@ public:
     void calculTemperature();
     void calculCentreMasse();
     void calculMomentCinetique();
+    void updateMomentCinetique();
+    void updatePosition();
 };
